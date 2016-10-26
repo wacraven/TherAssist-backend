@@ -1,7 +1,7 @@
 //ROUTES PLANNING DOC
 
 // login
-req: `/api/:username`
+req: `/api/login`
 example res: {
   clinicianId: '1234asdf',
   username: 'emily',
@@ -9,7 +9,7 @@ example res: {
 }
 
 // logout
-req: `/api/:username`
+req: `/api/logout/:username`
 example res: {
   logout: 'success'
 }

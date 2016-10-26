@@ -20,8 +20,7 @@ app.use(({ method, url, headers: { 'user-agent': agent } }, res, next) => {
   next()
 })
 
-app.use(express.static('public'))
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // routes
 app.use(routes)
@@ -42,10 +41,10 @@ app.use((err, { method, url, headers: { 'user-agent': agent } }, res, next) => {
 
 
 // Listen to requests on the provided port and log when available
-connect()
-  .then(() => {
+// connect()
+//   .then(() => {
     app.listen(port, () =>
       console.log(`Listening on port: ${port}`)
     )
-  })
-  .catch(console.error)
+  // })
+  // .catch(console.error)
