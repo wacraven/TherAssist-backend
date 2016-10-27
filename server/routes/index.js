@@ -5,17 +5,17 @@ const pg = require('pg');
 const databaseURL = process.env.DATABASE_URL || 'postgres://localhost:5432/serverAPI';
 const client = new pg.Client(databaseURL);
 client.connect();
-
+const bcrypt = require('bcryptjs');
+var salt = bcrypt.genSaltSync(10);
 
 router.post('/api/login', function(req, res, next) {
   client.query(`
-      SELECT * FROM "User"
-      WHERE "Username" = '${req.body.username}';
+    SELECT * FROM "User"
+    WHERE "Username" = '${req.body.Username}';
   `)
   .on('row', (data) => {
-    console.log(data.Password);
-    console.log(req.body.password);
-    if (data.password === req.body.password) {
+    let dbPassword = data.Password
+    if (bcrypt.compareSync(req.body.Password, dbPassword)) {
       return res.json({
         status: "OK"
       })
@@ -33,17 +33,34 @@ router.post('/api/logout', function(req, res, next) {
 
 
 router.post('/api/register', function(req, res, next) {
-  let user = {
-    ClinicianId: parseInt(Date.now()),
-    name: req.body.fullName,
-    username: req.body.username,
-    password: req.body.password
-  }
+  let userExists
   client.query(`
-    INSERT INTO "User" ("Name", "Username", "Password", "ClinicianId")
-    VALUES ('${user.Name}','${user.Username}','${user.Password}',${user.ClinicianId})
-  `);
-  res.json(user)
+    SELECT * FROM "User"
+    WHERE "Username" = '${req.body.Username}';
+  `)
+  .on('row', (data) => userExists = data.Username)
+  .on('end', (data) => {
+    console.log('USER EXISTS?', userExists);
+    if (!userExists) {
+      console.log('new user');
+      let hashedPassword = bcrypt.hashSync(`${req.body.Password}`, salt);
+      let user = {
+        ClinicianId: parseInt(Date.now()),
+        Name: req.body.FullName,
+        Username: req.body.Username,
+        Password: hashedPassword
+      }
+      client.query(`
+        INSERT INTO "User" ("Name", "Username", "Password", "ClinicianId")
+        VALUES ('${user.Name}','${user.Username}','${user.Password}',${user.ClinicianId})
+      `);
+      return res.json(user)
+    } else {
+      return res.json({
+        status: 'User already exists'
+      })
+    }
+  })
 });
 
 router.post('/api/patient/get/all', function(req, res, next) {
