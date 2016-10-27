@@ -31,8 +31,8 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'serverAPI',
-      user:     'admin',
-      password: 'password'
+      user:     'ptqkftcxusqolz',
+      password: '2M8koxuxoQk1b9WkPK_hd1f4hQ'
     },
     pool: {
       min: 2,
