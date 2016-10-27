@@ -30,10 +30,10 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      user: 'ptqkftcxusqolz',
-      password: '2M8koxuxoQk1b9WkPK_hd1f4hQ',
-      host: 'ec2-54-243-52-115.compute-1.amazonaws.com',
-      database: 'd8o8mpl0b79muq',
+      user: process.env.USER,
+      password: process.env.PASSWORD,
+      host: process.env.HOST,
+      database: process.env.DATABASE,
       ssl: true
   },
     pool: {
