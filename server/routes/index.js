@@ -1,12 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+
+const pg = require('pg');
+const databaseURL = process.env.DATABASE_URL || 'postgres://localhost:5432/serverAPI';
+const client = new pg.Client(databaseURL);
+client.connect();
 
 
 router.post('/api/login', function(req, res, next) {
-  let data = db.login(req.body.username)
-  res.json(data)
-  //check Password
+  client.query(`
+      SELECT * FROM "User"
+      WHERE "Username" = '${req.body.username}';
+  `)
+  .on('row', (data) => {
+    console.log(data.Password);
+    console.log(req.body.password);
+    if (data.password === req.body.password) {
+      return res.json({
+        status: "OK"
+      })
+    } else {
+      return res.json({
+        status: "Passwords do not match"
+      })
+    }
+  })
 });
 
 router.post('/api/logout', function(req, res, next) {
@@ -21,18 +39,71 @@ router.post('/api/register', function(req, res, next) {
     username: req.body.username,
     password: req.body.password
   }
-  db.register(user)
+  client.query(`
+    INSERT INTO "User" ("Name", "Username", "Password", "ClinicianId")
+    VALUES ('${user.Name}','${user.Username}','${user.Password}',${user.ClinicianId})
+  `);
   res.json(user)
 });
 
-router.get('/api/patient/', function(req, res, next) {
-  let data = db.queryPatientData(req.ClinicianId)
-  //query
+router.post('/api/patient/get/all', function(req, res, next) {
+  let patients = []
+  client.query(`
+    SELECT * FROM "Patient"
+    WHERE "ClinicianId" = '${req.body.ClinicianId}'
+  `)
+  .on('row', (row) => {
+    patients.push(row)
+  })
+  .on('end', () => {
+    return res.json(patients)
+  })
 });
 
-router.get('/api/mileage/', function(req, res, next) {
-  let data = db.queryMilage(req.ClinicianId)
-  //query
+router.post('/api/patient/get/one', function(req, res, next) {
+  client.query(`
+    SELECT * FROM "Patient"
+    WHERE "PatientId" = '${req.body.PatientId}'
+  `)
+  .on('row', (data) => {
+    res.json(data)
+  })
+});
+
+router.post('/api/patient/new', function(req, res, next) {
+  let patient = req.body
+  client.query(`
+    INSERT INTO "Patient" ("PatientId", "Name", "PrimaryContact", "Phone", "Location", "DateOfBirth", "Diagnosis", "LastEvaluation", "EvaluationFrequency", "Goal1", "Goal2", "Goal3", "SessionTime", "SessionFrequency", "ClinicianId")
+    VALUES ('${patient.PatientId}','${patient.Name}','${patient.PrimaryContact}','${patient.Phone}','${patient.Location}','${patient.DateOfBirth}','${patient.Diagnosis}','${patient.LastEvaluation}','${patient.EvaluationFrequency}','${patient.Goal1}','${patient.Goal2}','${patient.Goal3}','${patient.SessionTime}','${patient.SessionFrequency}','${patient.ClinicianId}')
+  `)
+});
+
+router.post('/api/mileage/get', function(req, res, next) {
+  let results = []
+  client.query(`
+    SELECT * FROM "Mileage"
+    WHERE "ClinicianId" = '${req.body.ClinicianId}'
+  `)
+  .on('row', (row) => {
+    results.push(row)
+  })
+  .on('end', () => {
+    return res.json(results)
+  })
+});
+
+router.post('/api/mileage/new', function(req, res, next) {
+  let trip = {
+    TripId: req.body.TripId,
+    ClinicianId: req.body.ClinicianId,
+    Mileage: req.body.Mileage,
+    Date: new Date()
+  }
+  client.query(`
+    INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
+    VALUES ('${trip.TripId}','${trip.ClinicianId}','${trip.Mileage}','${trip.Date}')
+  `)
+  res.json(trip)
 });
 
 module.exports = router;
