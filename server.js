@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const chalk = require('chalk')
 
-const routes = require('./server/routes/') // same as ./routes/index.js
+const routes = require('./routes/') // same as ./routes/index.js
 const { connect } = require('./database')
 
 const app = express()
