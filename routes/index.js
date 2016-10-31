@@ -2,18 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const pg = require('pg');
+pg.defaults.ssl = process.env.NODE_ENV === 'production';
 const databaseURL = process.env.DATABASE_URL || 'postgres://localhost:5432/serverAPI';
 const client = new pg.Client(databaseURL);
-client.connect();
+client.connect((err) => console.error(err));
+
 const bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 
 router.post('/api/login', function(req, res, next) {
+  console.log('POST LOGIN', req.body)
   client.query(`
     SELECT * FROM "User"
     WHERE "Username" = '${req.body.Username}';
   `)
   .on('row', (data) => {
+    console.log('ROW', data)
     let dbPassword = data.Password
     if (bcrypt.compareSync(req.body.Password, dbPassword)) {
       return res.json({
@@ -26,6 +30,7 @@ router.post('/api/login', function(req, res, next) {
       })
     }
   })
+  .on('error', (err) => console.error(err))
 });
 
 router.post('/api/logout', function(req, res, next) {
