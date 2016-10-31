@@ -11,13 +11,13 @@ const bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 
 router.post('/api/login', function(req, res, next) {
-  console.log('POST LOGIN', req.body)
+  let found = false
   client.query(`
     SELECT * FROM "User"
     WHERE "Username" = '${req.body.Username}';
   `)
   .on('row', (data) => {
-    console.log('ROW', data)
+    found = true
     let dbPassword = data.Password
     if (bcrypt.compareSync(req.body.Password, dbPassword)) {
       return res.json({
@@ -30,7 +30,13 @@ router.post('/api/login', function(req, res, next) {
       })
     }
   })
-  .on('error', (err) => console.error(err))
+  .on('end', () => {
+    if (!found) {
+      res.json({
+        status: "No username found"
+      })
+    }
+  })
 });
 
 router.post('/api/logout', function(req, res, next) {
@@ -46,9 +52,7 @@ router.post('/api/register', function(req, res, next) {
   `)
   .on('row', (data) => userExists = data.Username)
   .on('end', (data) => {
-    console.log('USER EXISTS?', userExists);
     if (!userExists) {
-      console.log('new user');
       let hashedPassword = bcrypt.hashSync(`${req.body.Password}`, salt);
       let user = {
         ClinicianId: parseInt(Date.now()),
