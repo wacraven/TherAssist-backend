@@ -103,6 +103,9 @@ router.post('/api/patient/new', function(req, res, next) {
     INSERT INTO "Patient" ("PatientId", "Name", "PrimaryContact", "Phone", "Location", "DateOfBirth", "Diagnosis", "LastEvaluation", "EvaluationFrequency", "Goal1", "Goal2", "Goal3", "SessionTime", "SessionFrequency", "ClinicianId")
     VALUES ('${patient.PatientId}','${patient.Name}','${patient.PrimaryContact}','${patient.Phone}','${patient.Location}','${patient.DateOfBirth}','${patient.Diagnosis}','${patient.LastEvaluation}','${patient.EvaluationFrequency}','${patient.Goal1}','${patient.Goal2}','${patient.Goal3}','${patient.SessionTime}','${patient.SessionFrequency}','${patient.ClinicianId}')
   `)
+  res.json({
+    status: 'OK'
+  })
 });
 
 router.post('/api/mileage/get', function(req, res, next) {
