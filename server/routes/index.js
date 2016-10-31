@@ -17,7 +17,8 @@ router.post('/api/login', function(req, res, next) {
     let dbPassword = data.Password
     if (bcrypt.compareSync(req.body.Password, dbPassword)) {
       return res.json({
-        status: "OK"
+        status: "OK",
+        ClinicianId: data.ClinicianId
       })
     } else {
       return res.json({
