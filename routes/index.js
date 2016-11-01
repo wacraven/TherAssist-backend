@@ -119,6 +119,35 @@ router.post('/api/patient/edit', function(req, res, next) {
   })
 });
 
+router.post('/api/appointment/add', function(req, res, next) {
+  let appointment = req.body
+  client.query(`
+    INSERT INTO "Appointment" ("PatientId", "AppointmentId", "TimeStart", "TimeEnd", "Date")
+    VALUES ('${appointment.PatientId}','${appointment.AppointmentId}','${appointment.TimeStart}','${appointment.TimeEnd}','${appointment.Date}')
+  `)
+  res.json({
+    status: 'OK'
+  })
+});
+
+router.post('/api/appointment/get/all', function(req, res, next) {
+  client.query(`
+    SELECT * FROM "Appointment"
+    WHERE "PatientId" = '${req.body.PatientId}'  `)
+  res.json({
+    status: 'OK'
+  })
+});
+
+router.post('/api/appointment/get/one', function(req, res, next) {
+  client.query(`
+    SELECT * FROM "Patient"
+    WHERE "PatientId" = '${req.body.AppointmentId}'  `)
+  res.json({
+    status: 'OK'
+  })
+});
+
 router.post('/api/mileage/get', function(req, res, next) {
   let results = []
   client.query(`
