@@ -133,19 +133,21 @@ router.post('/api/appointment/add', function(req, res, next) {
 router.post('/api/appointment/get/all', function(req, res, next) {
   client.query(`
     SELECT * FROM "Appointment"
-    WHERE "PatientId" = '${req.body.PatientId}'  `)
-  res.json({
-    status: 'OK'
-  })
+    WHERE "PatientId" = '${req.body.PatientId}'
+  `)
+    .on('row', (data) => {
+      res.json(data)
+    })
 });
 
 router.post('/api/appointment/get/one', function(req, res, next) {
   client.query(`
     SELECT * FROM "Patient"
-    WHERE "PatientId" = '${req.body.AppointmentId}'  `)
-  res.json({
-    status: 'OK'
-  })
+    WHERE "PatientId" = '${req.body.AppointmentId}'
+  `)
+    .on('row', (data) => {
+      res.json(data)
+    })
 });
 
 router.post('/api/mileage/get', function(req, res, next) {
