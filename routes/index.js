@@ -108,6 +108,17 @@ router.post('/api/patient/new', function(req, res, next) {
   })
 });
 
+router.post('/api/patient/edit', function(req, res, next) {
+  let patient = req.body
+  client.query(`
+    UPDATE "Patient" SET "Name" = '${patient.Name}', "PrimaryContact" = '${patient.PrimaryContact}', "Phone" = '${patient.Phone}', "Location" = '${patient.Location}', "DateOfBirth" = '${patient.DateOfBirth}', "Diagnosis" = '${patient.Diagnosis}', "LastEvaluation" = '${patient.LastEvaluation}', "EvaluationFrequency" = '${patient.EvaluationFrequency}', "Goal1" = '${patient.Goal1}', "Goal2" = '${patient.Goal2}', "Goal3" = '${patient.Goal3}', "SessionTime" = '${patient.SessionTime}', "SessionFrequency" = '${patient.SessionFrequency}'
+    WHERE "PatientId" = '${patient.PatientId}'
+  `)
+  res.json({
+    status: 'OK'
+  })
+});
+
 router.post('/api/mileage/get', function(req, res, next) {
   let results = []
   client.query(`
