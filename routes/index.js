@@ -171,28 +171,26 @@ router.post('/api/mileage/get', function(req, res, next) {
 
 router.post('/api/mileage/new', function(req, res, next) {
   let newTrip = req.body
+  let saveTrip = {}
   let requestURL = `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${newTrip.lat},${newTrip.long}&destinations=${newTrip.dest.replace(/,/g, '').split(' ').join('+')}&key=${process.env.GOOGLE_KEY}`
   console.log(requestURL);
   request(requestURL, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body) // Print the body of response.
-      console.log(response);
-      res.json(body)
+      saveTrip = JSON.parse(body)
+      saveTrip.TripId = newTrip.TripId
+      saveTrip.ClinicianId = newTrip.ClinicianId
+      saveTrip.ClinicianId = newTrip.ClinicianId
+      saveTrip.Date = newTrip.Date
+      saveTrip.Mileage = saveTrip.rows[0].elements[0].distance.text
+      res.json(saveTrip)
+      // client.query(`
+      //   INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
+      //   VALUES ('${saveTrip.TripId}','${saveTrip.ClinicianId}','${saveTrip.Mileage}','${saveTrip.Date}')
+      // `)
     } else {
       console.log(error);
     }
   })
-  // let trip = {
-  //   TripId: req.body.TripId,
-  //   ClinicianId: req.body.ClinicianId,
-  //   Mileage: req.body.Mileage,
-  //   Date: new Date()
-  // }
-  // client.query(`
-  //   INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
-  //   VALUES ('${trip.TripId}','${trip.ClinicianId}','${trip.Mileage}','${trip.Date}')
-  // `)
-  // res.json(trip)
 });
 
 module.exports = router;
