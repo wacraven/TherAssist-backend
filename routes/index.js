@@ -8,7 +8,8 @@ const client = new pg.Client(databaseURL);
 client.connect((err) => console.error(err));
 
 const bcrypt = require('bcryptjs');
-var salt = bcrypt.genSaltSync(10);
+const salt = bcrypt.genSaltSync(10);
+const request = require('request');
 
 router.post('/api/login', function(req, res, next) {
   let found = false
@@ -169,17 +170,24 @@ router.post('/api/mileage/get', function(req, res, next) {
 });
 
 router.post('/api/mileage/new', function(req, res, next) {
-  let trip = {
-    TripId: req.body.TripId,
-    ClinicianId: req.body.ClinicianId,
-    Mileage: req.body.Mileage,
-    Date: new Date()
-  }
-  client.query(`
-    INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
-    VALUES ('${trip.TripId}','${trip.ClinicianId}','${trip.Mileage}','${trip.Date}')
-  `)
-  res.json(trip)
+  let newTrip = req.body
+  request(`https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial?origins=${newTrip.lat},${newTrip.long}&destinations=${newTrip.dest.replace(/,/g, '').split(' ').join('+')}&key=${process.env.GOOGLE_KEY}`, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log(body) // Print the body of response.
+      res.json(body)
+    }
+  })
+  // let trip = {
+  //   TripId: req.body.TripId,
+  //   ClinicianId: req.body.ClinicianId,
+  //   Mileage: req.body.Mileage,
+  //   Date: new Date()
+  // }
+  // client.query(`
+  //   INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
+  //   VALUES ('${trip.TripId}','${trip.ClinicianId}','${trip.Mileage}','${trip.Date}')
+  // `)
+  // res.json(trip)
 });
 
 module.exports = router;
