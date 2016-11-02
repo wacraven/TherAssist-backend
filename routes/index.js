@@ -133,7 +133,8 @@ router.post('/api/appointment/add', function(req, res, next) {
 router.post('/api/appointment/get/all', function(req, res, next) {
   client.query(`
     SELECT * FROM "Appointment"
-    WHERE "ClinicianId" = '${req.body.ClinicianId}'
+    JOIN "Patient" ON 'Patient.PatientId' = 'Appointment.PatientId'
+    WHERE "Patient.ClinicianId" = '${req.body.ClinicianId}'
   `)
     .on('row', (data) => {
       res.json(data)
