@@ -122,8 +122,8 @@ router.post('/api/patient/edit', function(req, res, next) {
 router.post('/api/appointment/add', function(req, res, next) {
   let appointment = req.body
   client.query(`
-    INSERT INTO "Appointment" ("PatientId", "AppointmentId", "TimeStart", "TimeEnd", "ClinicianId")
-    VALUES ('${appointment.PatientId}','${appointment.AppointmentId}','${appointment.TimeStart}','${appointment.TimeEnd}', '${appointment.ClinicianId}')
+    INSERT INTO "Appointment" ("PatientId", "AppointmentId", "TimeStart", "TimeEnd", "ClinicianId", "Title")
+    VALUES ('${appointment.PatientId}','${appointment.AppointmentId}','${appointment.TimeStart}','${appointment.TimeEnd}', '${appointment.ClinicianId}', '${appointment.Title}')
   `)
   res.json({
     status: 'OK'
