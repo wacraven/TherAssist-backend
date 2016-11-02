@@ -171,7 +171,7 @@ router.post('/api/mileage/get', function(req, res, next) {
 
 router.post('/api/mileage/new', function(req, res, next) {
   let newTrip = req.body
-  let requestURL = `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial?origins=${newTrip.lat},${newTrip.long}&destinations=${newTrip.dest.replace(/,/g, '').split(' ').join('+')}&key=${process.env.GOOGLE_KEY}`
+  let requestURL = `https://maps.googleapis.com/maps/api/distancematrix/json&units=imperial?origins=${newTrip.lat},${newTrip.long}&destinations=${newTrip.dest.replace(/,/g, '').split(' ').join('+')}&key=${process.env.GOOGLE_KEY}`
   console.log(requestURL);
   request(requestURL, function (error, response, body) {
     if (!error && response.statusCode == 200) {
