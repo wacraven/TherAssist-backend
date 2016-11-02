@@ -176,9 +176,9 @@ router.post('/api/mileage/new', function(req, res, next) {
   request(requestURL, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       console.log(body) // Print the body of response.
+      console.log(response);
       res.json(body)
     } else {
-      console.log(response);
       console.log(error);
     }
   })
