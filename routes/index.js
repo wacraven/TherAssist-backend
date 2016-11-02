@@ -123,7 +123,7 @@ router.post('/api/appointment/add', function(req, res, next) {
   let appointment = req.body
   client.query(`
     INSERT INTO "Appointment" ("PatientId", "AppointmentId", "TimeStart", "TimeEnd", "ClinicianId")
-    VALUES ('${appointment.PatientId}','${appointment.AppointmentId}','${appointment.TimeStart}','${appointment.TimeEnd}', ${appointment.ClinicianId})
+    VALUES ('${appointment.PatientId}','${appointment.AppointmentId}','${appointment.TimeStart}','${appointment.TimeEnd}', '${appointment.ClinicianId}')
   `)
   res.json({
     status: 'OK'
