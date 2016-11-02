@@ -182,10 +182,12 @@ router.post('/api/mileage/new', function(req, res, next) {
       saveTrip.ClinicianId = newTrip.ClinicianId
       saveTrip.Date = newTrip.Date
       saveTrip.Mileage = saveTrip.rows[0].elements[0].distance.text
+      saveTrip.Destination = saveTrip.destination_addresses[0]
+      saveTrip.Origin = saveTrip.origin_addresses[0]
       res.json(saveTrip)
       client.query(`
-        INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date")
-        VALUES ('${saveTrip.TripId}','${saveTrip.ClinicianId}','${saveTrip.Mileage}','${saveTrip.Date}')
+        INSERT INTO "Mileage" ("TripId", "ClinicianId", "Mileage", "Date", "Origin", "Destination")
+        VALUES ('${saveTrip.TripId}','${saveTrip.ClinicianId}','${saveTrip.Mileage}','${saveTrip.Date}','${saveTrip.Origin}','${saveTrip.Destination}')
       `)
     } else {
       console.log(error);
