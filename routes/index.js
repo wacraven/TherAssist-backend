@@ -178,7 +178,8 @@ router.post('/api/mileage/new', function(req, res, next) {
       console.log(body) // Print the body of response.
       res.json(body)
     } else {
-      console.log;
+      console.log(response);
+      console.log(error);
     }
   })
   // let trip = {
