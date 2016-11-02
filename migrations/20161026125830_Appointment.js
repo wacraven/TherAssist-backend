@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.raw(
-    'CREATE TABLE "Appointment" ("AppointmentId" varchar(80) PRIMARY KEY NOT NULL,"PatientId" varchar(80),"TimeStart" varchar(80),"TimeEnd" varchar(80));'
+    'CREATE TABLE "Appointment" ("AppointmentId" varchar(80) PRIMARY KEY NOT NULL,"PatientId" varchar(80),"ClinicianId" varchar(80),"TimeStart" varchar(80),"TimeEnd" varchar(80));'
   )
 };
 
