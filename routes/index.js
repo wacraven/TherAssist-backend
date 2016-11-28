@@ -155,7 +155,7 @@ router.post('/api/appointment/search', function(req, res, next) {
       appointments.push(data)
     })
     .on('end', () => {
-      return res.json(appointments)
+      return res.json(appointments[1].AppointmentId)
     })
 });
 
