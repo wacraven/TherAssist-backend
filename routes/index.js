@@ -149,7 +149,7 @@ router.post('/api/appointment/search', function(req, res, next) {
   let appointments = []
   client.query(`
     SELECT * FROM "Appointment"
-    WHERE "Title" = '${req.body.Title}' AND "TimeStart" = '${req.body.startTime}'
+    WHERE "Title" = '${req.body.Title}'
   `)
     .on('row', (data) => {
       appointments.push(data)
