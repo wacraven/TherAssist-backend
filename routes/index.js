@@ -145,9 +145,19 @@ router.post('/api/appointment/get/all', function(req, res, next) {
     })
 });
 
+router.post('/api/appointment/search', function(req, res, next) {
+  client.query(`
+    SELECT * FROM "Appointment"
+    WHERE "Title" = '${req.body.Title}' AND "TimeStart" = '${req.body.startTime}'
+  `)
+    .on('row', (data) => {
+      res.json(data.AppointmentId)
+    })
+});
+
 router.post('/api/appointment/get/one', function(req, res, next) {
   client.query(`
-    SELECT * FROM "Patient"
+    SELECT * FROM "Appointment"
     WHERE "AppointmentId" = '${req.body.AppointmentId}'
   `)
     .on('row', (data) => {
