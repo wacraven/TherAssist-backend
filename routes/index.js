@@ -146,12 +146,16 @@ router.post('/api/appointment/get/all', function(req, res, next) {
 });
 
 router.post('/api/appointment/search', function(req, res, next) {
+  let appointments = []
   client.query(`
     SELECT * FROM "Appointment"
     WHERE "Title" = '${req.body.Title}' AND "TimeStart" = '${req.body.startTime}'
   `)
     .on('row', (data) => {
-      res.json(data.AppointmentId)
+      appointments.push(data)
+    })
+    .on('end', () => {
+      return res.json(appointments)
     })
 });
 
