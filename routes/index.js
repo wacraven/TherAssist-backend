@@ -160,13 +160,17 @@ router.post('/api/appointment/search', function(req, res, next) {
 });
 
 router.post('/api/appointment/get/one', function(req, res, next) {
+  let appointments = []
   client.query(`
     SELECT * FROM "Appointment"
     WHERE "AppointmentId" = '${req.body.AppointmentId}'
   `)
-    .on('row', (data) => {
-      res.json(data)
-    })
+  .on('row', (data) => {
+    appointments.push(data)
+  })
+  .on('end', () => {
+    return res.json(appointments[0])
+  })
 });
 
 router.post('/api/mileage/get', function(req, res, next) {
