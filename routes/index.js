@@ -176,7 +176,7 @@ router.post('/api/appointment/get/one', function(req, res, next) {
 router.post('/api/appointment/edit', function(req, res, next) {
   let appointment = req.body
   client.query(`
-    UPDATE "Appointment" SET "TimeStart" = '${appointment.TimeStart}', "TimeEnd" = '${appointment.TimeEnd}', "Date" = '${appointment.Date}'
+    UPDATE "Appointment" SET "TimeStart" = '${appointment.TimeStart}', "TimeEnd" = '${appointment.TimeEnd}'
     WHERE "AppointmentId" = '${appointment.AppointmentId}'
   `)
   res.json({
