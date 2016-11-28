@@ -147,6 +147,7 @@ router.post('/api/appointment/get/all', function(req, res, next) {
 
 router.post('/api/appointment/search', function(req, res, next) {
   let appointments = []
+  console.log(req.body);
   client.query(`
     SELECT * FROM "Appointment"
     WHERE "Title" = '${req.body.Title}'
