@@ -184,6 +184,15 @@ router.post('/api/appointment/edit', function(req, res, next) {
   })
 });
 
+router.post('/api/appointment/delete', function(req, res, next) {
+  client.query(`
+    DELETE FROM "Appointment" WHERE "AppointmentId" = '${req.body.AppointmentId}'
+  `)
+  res.json({
+    status: 'OK'
+  })
+});
+
 router.post('/api/mileage/get', function(req, res, next) {
   let results = []
   client.query(`
